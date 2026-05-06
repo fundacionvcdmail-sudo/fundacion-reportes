@@ -3,235 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fundación | Ingreso Estructurado</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Fundación | Ingreso Clínico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6366f1;
             --secondary: #a855f7;
-            --bg: #0f172a;
             --card: rgba(30, 41, 59, 0.8);
-            --text: #f8fafc;
             --input-bg: rgba(15, 23, 42, 0.6);
+            --text: #f8fafc;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #1e1b4b, #0f172a); color: var(--text); margin: 0; padding: 20px 15px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 550px; background: var(--card); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 25px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
-        h1 { font-size: 26px; font-weight: 600; margin-bottom: 5px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+        .container { width: 100%; max-width: 580px; background: var(--card); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); margin-bottom: 30px; }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 5px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
         p.subtitle { font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 25px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px; }
         .full-width { grid-column: 1 / -1; }
         .input-group { display: flex; flex-direction: column; }
-        label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #818cf8; margin-bottom: 6px; margin-left: 4px; }
-        input, textarea, select { width: 100%; background: var(--input-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px 14px; color: white; font-family: inherit; font-size: 14px; transition: all 0.3s ease; }
+        label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #818cf8; margin-bottom: 5px; margin-left: 4px; }
+        input, textarea, select { width: 100%; background: var(--input-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 11px 13px; color: white; font-family: inherit; font-size: 14px; transition: all 0.3s ease; }
         input[type="file"] { padding: 8px; font-size: 12px; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
-        textarea { height: 90px; resize: none; }
-        .section-title { font-size: 14px; color: #c084fc; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); grid-column: 1 / -1; text-align: center; font-weight: 600; }
-        .submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 16px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4); margin-top: 10px; }
-        .submit-btn:active { transform: scale(0.98); }
+        select { appearance: none; cursor: pointer; }
+        select option { background: #1e293b; color: white; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
+        textarea { height: 80px; resize: none; }
+        .section-title { font-size: 13px; color: #c084fc; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); grid-column: 1 / -1; text-align: center; font-weight: 700; letter-spacing: 0.05em; }
+        .alerta-section { margin-top: 18px; margin-bottom: 20px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .alerta-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .alerta-btn { padding: 11px 5px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.3); color: #94a3b8; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .alerta-btn.active[data-val="Normal"] { background: #166534; color: white; border-color: #22c55e; }
+        .alerta-btn.active[data-val="Precaución"] { background: #854d0e; color: white; border-color: #eab308; }
+        .alerta-btn.active[data-val="Crítico"] { background: #991b1b; color: white; border-color: #ef4444; }
+        .submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 16px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(99,102,241,0.4); margin-top: 10px; transition: transform 0.2s; }
+        .submit-btn:active { transform: scale(0.97); }
         .status { margin-top: 15px; text-align: center; font-size: 13px; padding: 12px; border-radius: 12px; display: none; }
-        .status.success { background: rgba(34, 197, 94, 0.2); color: #4ade80; display: block; }
-        .status.error { background: rgba(239, 68, 68, 0.2); color: #f87171; display: block; }
+        .status.success { background: rgba(34,197,94,0.2); color: #4ade80; display: block; }
+        .status.error { background: rgba(239,68,68,0.2); color: #f87171; display: block; }
         .uppercase-input { text-transform: uppercase; }
-        .loading { pointer-events: none; opacity: 0.7; }
-        .img-preview { max-width: 120px; border-radius: 12px; margin-top: 8px; display: none; border: 2px solid rgba(99,102,241,0.3); }
+        .loading { pointer-events: none; opacity: 0.6; }
+        .img-preview { max-width: 100px; border-radius: 10px; margin-top: 6px; display: none; border: 2px solid rgba(99,102,241,0.3); }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Ingreso Clínico</h1>
+    <p class="subtitle">Complete todos los campos para generar la ficha</p>
 
-    <div class="container">
-        <h1>Ingreso Clínico</h1>
-        <p class="subtitle">Complete los campos para generar la ficha del paciente</p>
+    <form id="registroForm">
+        <div class="form-grid">
 
-        <form id="registroForm">
-            <div class="form-grid">
-                
-                <div class="input-group full-width">
-                    <label>📸 Foto del Paciente</label>
-                    <input type="file" id="foto_paciente" accept="image/*">
-                    <img id="preview" class="img-preview" alt="Vista previa">
-                </div>
+            <!-- ========== SECCIÓN 1: DATOS Y MEDIA ========== -->
+            <div class="section-title">📋 DATOS Y MEDIA DEL PACIENTE</div>
 
-                <div class="input-group full-width">
-                    <label>Nombre Completo del Paciente</label>
-                    <input type="text" id="nombre" class="uppercase-input" required>
-                </div>
-                
-                <div class="input-group">
-                    <label>Documento de Identidad</label>
-                    <input type="number" id="cedula" required>
-                </div>
-                <div class="input-group">
-                    <label>Edad (Años)</label>
-                    <input type="number" id="edad">
-                </div>
-
-                <div class="input-group">
-                    <label>Fecha de Ingreso</label>
-                    <input type="date" id="fecha_ingreso" required>
-                </div>
-                <div class="input-group">
-                    <label>Costo Mensual ($)</label>
-                    <input type="number" id="costo_mensual" required>
-                </div>
-
-                <div class="section-title">DATOS DEL ACUDIENTE</div>
-                
-                <div class="input-group full-width">
-                    <label>Nombre del Acudiente</label>
-                    <input type="text" id="nombre_acudiente" class="uppercase-input" required>
-                </div>
-                <div class="input-group">
-                    <label>Teléfono Acudiente</label>
-                    <input type="tel" id="telefono_acudiente" required>
-                </div>
-                <div class="input-group">
-                    <label>Parentesco</label>
-                    <input type="text" id="parentesco" class="uppercase-input" required>
-                </div>
-
-                <div class="section-title">TRATAMIENTOS</div>
-
-                <div class="input-group">
-                    <label>🍄 Tomas Psilocibina</label>
-                    <input type="number" id="psilocibina" value="0">
-                </div>
-                <div class="input-group">
-                    <label>💉 Sueros Desintox.</label>
-                    <input type="number" id="sueros" value="0">
-                </div>
-
-                <div class="section-title">CITAS Y ATENCIONES</div>
-
-                <div class="input-group">
-                    <label>🏥 Citas Médicas</label>
-                    <input type="text" id="citas_medicas" placeholder="Ej: Programada 12/Oct" class="uppercase-input">
-                </div>
-                <div class="input-group">
-                    <label>🦷 Odontología</label>
-                    <input type="text" id="odontologia" placeholder="Ej: Pendiente" class="uppercase-input">
-                </div>
-                <div class="input-group">
-                    <label>🧠 Psiquiatría</label>
-                    <input type="text" id="psiquiatria" placeholder="Ej: Sí" class="uppercase-input">
-                </div>
-                <div class="input-group">
-                    <label>👨‍👩‍👧 Terapia en Familia</label>
-                    <input type="text" id="terapia_familia" placeholder="Ej: Requiere" class="uppercase-input">
-                </div>
-
-                <div class="input-group full-width" style="margin-top: 10px;">
-                    <label>Observaciones Adicionales</label>
-                    <textarea id="observaciones"></textarea>
-                </div>
+            <div class="input-group full-width">
+                <label>📸 Foto del Paciente</label>
+                <input type="file" id="foto_paciente" accept="image/*">
+                <img id="preview" class="img-preview" alt="Vista previa">
+            </div>
+            <div class="input-group full-width">
+                <label>Nombre Completo del Paciente</label>
+                <input type="text" id="nombre" class="uppercase-input" required>
+            </div>
+            <div class="input-group">
+                <label>Documento de Identidad</label>
+                <input type="number" id="cedula" required>
+            </div>
+            <div class="input-group">
+                <label>Edad (Años)</label>
+                <input type="number" id="edad">
             </div>
 
-            <button type="submit" id="sendBtn" class="submit-btn">ENVIAR Y GENERAR FICHA</button>
-            <div id="statusMsg" class="status"></div>
-        </form>
-    </div>
+            <!-- ========== SECCIÓN 2: INGRESO Y FINANCIEROS ========== -->
+            <div class="section-title">💰 DATOS DE INGRESO Y FINANCIEROS</div>
 
-    <script>
-        const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyfrxAl87JqqiqJIFyWtLRJILssjWlBe-P0V0tRLC_ZcRXHrVGtYd402kO4WhUs0w8iEQ/exec";
+            <div class="input-group">
+                <label>Fecha de Ingreso</label>
+                <input type="date" id="fecha_ingreso" required>
+            </div>
+            <div class="input-group">
+                <label>Costo Mensual ($)</label>
+                <input type="number" id="costo_mensual" required>
+            </div>
+            <div class="input-group">
+                <label>Fecha de Pago</label>
+                <input type="date" id="fecha_pago">
+            </div>
+            <div class="input-group">
+                <label>Estado de Pago</label>
+                <select id="estado_pago">
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="PAGADO">Pagado</option>
+                    <option value="PARCIAL">Parcial</option>
+                    <option value="ATRASADO">Atrasado</option>
+                </select>
+            </div>
 
-        // Vista previa de la foto al seleccionarla
-        document.getElementById('foto_paciente').onchange = function(ev) {
-            const preview = document.getElementById('preview');
-            if (ev.target.files.length > 0) {
-                preview.src = URL.createObjectURL(ev.target.files[0]);
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-            }
+            <!-- ========== SECCIÓN 3: ACUDIENTE ========== -->
+            <div class="section-title">👥 DATOS DEL ACUDIENTE</div>
+
+            <div class="input-group full-width">
+                <label>Nombre del Acudiente</label>
+                <input type="text" id="nombre_acudiente" class="uppercase-input" required>
+            </div>
+            <div class="input-group">
+                <label>Teléfono Acudiente</label>
+                <input type="tel" id="telefono_acudiente" required>
+            </div>
+            <div class="input-group">
+                <label>Parentesco</label>
+                <input type="text" id="parentesco" class="uppercase-input" required>
+            </div>
+
+            <!-- ========== SECCIÓN 4: CONTROL CLÍNICO ========== -->
+            <div class="section-title">💊 CONTROL CLÍNICO Y TRATAMIENTOS</div>
+
+            <div class="input-group full-width">
+                <label>Medicamentos Actuales</label>
+                <input type="text" id="medicamentos" class="uppercase-input" placeholder="Ej: QUETIAPINA 25MG, SERTRALINA 50MG">
+            </div>
+            <div class="input-group">
+                <label>🍄 Tomas Psilocibina</label>
+                <input type="number" id="psilocibina" value="0">
+            </div>
+            <div class="input-group">
+                <label>💉 Sueros Desintox.</label>
+                <input type="number" id="sueros" value="0">
+            </div>
+
+            <!-- ========== SECCIÓN 5: CITAS Y TERAPIAS ========== -->
+            <div class="section-title">📅 CONTROL DE CITAS Y TERAPIAS</div>
+
+            <div class="input-group">
+                <label>🏥 Citas Médicas</label>
+                <input type="text" id="citas_medicas" class="uppercase-input" placeholder="Ej: PROGRAMADA">
+            </div>
+            <div class="input-group">
+                <label>🦷 Odontología</label>
+                <input type="text" id="citas_odontologia" class="uppercase-input" placeholder="Ej: PENDIENTE">
+            </div>
+            <div class="input-group">
+                <label>🧠 Psicología</label>
+                <input type="text" id="citas_psicologia" class="uppercase-input" placeholder="Ej: SEMANAL">
+            </div>
+            <div class="input-group">
+                <label>🤝 Consejería Terapéutica</label>
+                <input type="text" id="consejeria" class="uppercase-input" placeholder="Ej: ACTIVA">
+            </div>
+            <div class="input-group">
+                <label>🧪 Psiquiatría</label>
+                <input type="text" id="citas_psiquiatria" class="uppercase-input" placeholder="Ej: MENSUAL">
+            </div>
+            <div class="input-group">
+                <label>👨‍👩‍👧 Terapia en Familia</label>
+                <input type="text" id="terapia_familia" class="uppercase-input" placeholder="Ej: REQUIERE">
+            </div>
+
+            <!-- ========== SECCIÓN 6: SEGUIMIENTO ========== -->
+            <div class="input-group full-width" style="margin-top: 12px;">
+                <label>📝 Observaciones Adicionales</label>
+                <textarea id="observaciones" placeholder="Detalles médicos, comportamiento, notas importantes..."></textarea>
+            </div>
+        </div>
+
+        <!-- ALERTA -->
+        <div class="alerta-section">
+            <label style="text-align:center; margin-bottom:10px; display:block;">🚨 NIVEL DE RIESGO / ALERTA</label>
+            <div class="alerta-selector">
+                <div class="alerta-btn active" data-val="Normal">NORMAL</div>
+                <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
+                <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
+            </div>
+        </div>
+
+        <button type="submit" id="sendBtn" class="submit-btn">ENVIAR Y GENERAR FICHA</button>
+        <div id="statusMsg" class="status"></div>
+    </form>
+</div>
+
+<script>
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyfrxAl87JqqiqJIFyWtLRJILssjWlBe-P0V0tRLC_ZcRXHrVGtYd402kO4WhUs0w8iEQ/exec";
+    let alertaSeleccionada = "Normal";
+
+    // Vista previa de la foto
+    document.getElementById('foto_paciente').onchange = function(ev) {
+        const p = document.getElementById('preview');
+        if (ev.target.files.length > 0) { p.src = URL.createObjectURL(ev.target.files[0]); p.style.display = 'block'; }
+        else { p.style.display = 'none'; }
+    };
+
+    // Botones de alerta
+    document.querySelectorAll('.alerta-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            alertaSeleccionada = btn.dataset.val;
         };
+    });
 
-        // Comprime la imagen a max 800px y calidad 0.6 para que no supere ~200KB
-        function compressImage(file, maxWidth, quality) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width;
-                        let h = img.height;
-                        if (w > maxWidth) {
-                            h = (maxWidth / w) * h;
-                            w = maxWidth;
-                        }
-                        canvas.width = w;
-                        canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
+    // Comprimir imagen antes de enviar
+    function compressImage(file, maxW, quality) {
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = e => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > maxW) { h = (maxW / w) * h; w = maxW; }
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(c.toDataURL('image/jpeg', quality));
                 };
-            });
+            };
+        });
+    }
+
+    // Envío del formulario
+    document.getElementById('registroForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('sendBtn');
+        const status = document.getElementById('statusMsg');
+
+        btn.innerText = "Procesando...";
+        btn.classList.add('loading');
+        status.style.display = "none";
+
+        let fotoBase64 = "";
+        const fi = document.getElementById('foto_paciente');
+        if (fi.files.length > 0) {
+            try { fotoBase64 = await compressImage(fi.files[0], 600, 0.5); } catch(err) {}
         }
 
-        document.getElementById('registroForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('sendBtn');
-            const status = document.getElementById('statusMsg');
-
-            btn.innerText = "Procesando...";
-            btn.classList.add('loading');
-            status.style.display = "none";
-
-            // Comprimir la foto si existe
-            let fotoBase64 = "";
-            const fileInput = document.getElementById('foto_paciente');
-            if (fileInput.files.length > 0) {
-                try {
-                    fotoBase64 = await compressImage(fileInput.files[0], 800, 0.6);
-                } catch (err) {
-                    console.error("Error al procesar imagen", err);
-                }
-            }
-
-            const payload = {
-                fecha_registro: new Date().toISOString().split('T')[0],
-                foto_paciente: fotoBase64,
-                nombre_paciente: document.getElementById('nombre').value.trim().toUpperCase(),
-                documento: document.getElementById('cedula').value.trim(),
-                edad: document.getElementById('edad').value || "",
-                fecha_ingreso: document.getElementById('fecha_ingreso').value,
-                costo_mensual: document.getElementById('costo_mensual').value.trim(),
-                nombre_acudiente: document.getElementById('nombre_acudiente').value.trim().toUpperCase(),
-                telefono_acudiente: document.getElementById('telefono_acudiente').value.trim(),
-                parentesco: document.getElementById('parentesco').value.trim().toUpperCase(),
-                tomas_psilocibina: document.getElementById('psilocibina').value || 0,
-                sueros_desintoxicacion: document.getElementById('sueros').value || 0,
-                citas_medicas: document.getElementById('citas_medicas').value.trim().toUpperCase(),
-                odontologia: document.getElementById('odontologia').value.trim().toUpperCase(),
-                psiquiatria: document.getElementById('psiquiatria').value.trim().toUpperCase(),
-                terapia_familia: document.getElementById('terapia_familia').value.trim().toUpperCase(),
-                observaciones: document.getElementById('observaciones').value.trim()
-            };
-
-            try {
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                });
-
-                status.innerText = "✅ Ficha generada correctamente.";
-                status.className = "status success";
-                document.getElementById('registroForm').reset();
-                document.getElementById('preview').style.display = 'none';
-            } catch (err) {
-                status.innerText = "❌ Error de conexión. Revisa tu internet.";
-                status.className = "status error";
-            } finally {
-                btn.innerText = "ENVIAR Y GENERAR FICHA";
-                btn.classList.remove('loading');
-            }
+        const payload = {
+            fecha_registro:          new Date().toISOString().split('T')[0],
+            foto_paciente:           fotoBase64,
+            nombre_paciente:         document.getElementById('nombre').value.trim().toUpperCase(),
+            documento:               document.getElementById('cedula').value.trim(),
+            edad:                    document.getElementById('edad').value || "",
+            fecha_ingreso:           document.getElementById('fecha_ingreso').value,
+            costo_mensual:           document.getElementById('costo_mensual').value.trim(),
+            fecha_pago:              document.getElementById('fecha_pago').value,
+            estado_pago:             document.getElementById('estado_pago').value,
+            nombre_acudiente:        document.getElementById('nombre_acudiente').value.trim().toUpperCase(),
+            telefono_acudiente:      document.getElementById('telefono_acudiente').value.trim(),
+            parentesco:              document.getElementById('parentesco').value.trim().toUpperCase(),
+            medicamentos:            document.getElementById('medicamentos').value.trim().toUpperCase(),
+            tomas_psilocibina:       document.getElementById('psilocibina').value || 0,
+            sueros_desintoxicacion:  document.getElementById('sueros').value || 0,
+            citas_medicas:           document.getElementById('citas_medicas').value.trim().toUpperCase(),
+            citas_odontologia:       document.getElementById('citas_odontologia').value.trim().toUpperCase(),
+            citas_psicologia:        document.getElementById('citas_psicologia').value.trim().toUpperCase(),
+            consejeria_terapeutica:  document.getElementById('consejeria').value.trim().toUpperCase(),
+            citas_psiquiatria:       document.getElementById('citas_psiquiatria').value.trim().toUpperCase(),
+            terapia_familia:         document.getElementById('terapia_familia').value.trim().toUpperCase(),
+            observaciones:           document.getElementById('observaciones').value.trim(),
+            nivel_alerta:            alertaSeleccionada
         };
-    </script>
+
+        try {
+            await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+
+            status.innerText = "✅ Ficha de " + payload.nombre_paciente + " generada exitosamente.";
+            status.className = "status success";
+            document.getElementById('registroForm').reset();
+            document.getElementById('preview').style.display = 'none';
+            // Reset alerta
+            document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.alerta-btn[data-val="Normal"]').classList.add('active');
+            alertaSeleccionada = "Normal";
+        } catch (err) {
+            status.innerText = "❌ Error de conexión. Revisa tu internet.";
+            status.className = "status error";
+        } finally {
+            btn.innerText = "ENVIAR Y GENERAR FICHA";
+            btn.classList.remove('loading');
+        }
+    };
+</script>
 </body>
 </html>
