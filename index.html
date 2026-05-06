@@ -6,13 +6,7 @@
     <title>Fundación | Ingreso Clínico</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --card: rgba(30, 41, 59, 0.8);
-            --input-bg: rgba(15, 23, 42, 0.6);
-            --text: #f8fafc;
-        }
+        :root { --primary: #6366f1; --secondary: #a855f7; --card: rgba(30,41,59,0.8); --input-bg: rgba(15,23,42,0.6); --text: #f8fafc; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at top right, #1e1b4b, #0f172a); color: var(--text); margin: 0; padding: 20px 15px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 580px; background: var(--card); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); margin-bottom: 30px; }
@@ -44,12 +38,21 @@
         .loading { pointer-events: none; opacity: 0.6; }
         .img-preview { max-width: 100px; border-radius: 10px; margin-top: 6px; display: none; border: 2px solid rgba(99,102,241,0.3); }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        /* Indicador de valor en letras */
+        .valor-letras {
+            font-size: 11px;
+            color: #a78bfa;
+            margin-top: 4px;
+            margin-left: 4px;
+            min-height: 16px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Ingreso Clínico</h1>
-    <p class="subtitle">Complete todos los campos para generar la ficha</p>
+    <p class="subtitle">Complete los campos necesarios para generar la ficha</p>
 
     <form id="registroForm">
         <div class="form-grid">
@@ -64,11 +67,11 @@
             </div>
             <div class="input-group full-width">
                 <label>Nombre Completo del Paciente</label>
-                <input type="text" id="nombre" class="uppercase-input" required>
+                <input type="text" id="nombre" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>Documento de Identidad</label>
-                <input type="number" id="cedula" required>
+                <input type="number" id="cedula">
             </div>
             <div class="input-group">
                 <label>Edad (Años)</label>
@@ -80,24 +83,30 @@
 
             <div class="input-group">
                 <label>Fecha de Ingreso</label>
-                <input type="date" id="fecha_ingreso" required>
+                <input type="date" id="fecha_ingreso">
             </div>
             <div class="input-group">
-                <label>Costo Mensual ($)</label>
-                <input type="number" id="costo_mensual" required>
-            </div>
-            <div class="input-group">
-                <label>Fecha de Pago</label>
-                <input type="date" id="fecha_pago">
-            </div>
-            <div class="input-group">
-                <label>Estado de Pago</label>
-                <select id="estado_pago">
-                    <option value="PENDIENTE">Pendiente</option>
-                    <option value="PAGADO">Pagado</option>
-                    <option value="PARCIAL">Parcial</option>
-                    <option value="ATRASADO">Atrasado</option>
+                <label>Mes de Pago</label>
+                <select id="mes_pago">
+                    <option value="">— Seleccionar —</option>
+                    <option value="ENERO">Enero</option>
+                    <option value="FEBRERO">Febrero</option>
+                    <option value="MARZO">Marzo</option>
+                    <option value="ABRIL">Abril</option>
+                    <option value="MAYO">Mayo</option>
+                    <option value="JUNIO">Junio</option>
+                    <option value="JULIO">Julio</option>
+                    <option value="AGOSTO">Agosto</option>
+                    <option value="SEPTIEMBRE">Septiembre</option>
+                    <option value="OCTUBRE">Octubre</option>
+                    <option value="NOVIEMBRE">Noviembre</option>
+                    <option value="DICIEMBRE">Diciembre</option>
                 </select>
+            </div>
+            <div class="input-group full-width">
+                <label>Costo Mensual ($)</label>
+                <input type="number" id="costo_mensual" placeholder="Ej: 750000" oninput="actualizarLetras()">
+                <div class="valor-letras" id="valorEnLetras"></div>
             </div>
 
             <!-- ========== SECCIÓN 3: ACUDIENTE ========== -->
@@ -105,15 +114,15 @@
 
             <div class="input-group full-width">
                 <label>Nombre del Acudiente</label>
-                <input type="text" id="nombre_acudiente" class="uppercase-input" required>
+                <input type="text" id="nombre_acudiente" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>Teléfono Acudiente</label>
-                <input type="tel" id="telefono_acudiente" required>
+                <input type="tel" id="telefono_acudiente">
             </div>
             <div class="input-group">
                 <label>Parentesco</label>
-                <input type="text" id="parentesco" class="uppercase-input" required>
+                <input type="text" id="parentesco" class="uppercase-input">
             </div>
 
             <!-- ========== SECCIÓN 4: CONTROL CLÍNICO ========== -->
@@ -137,33 +146,33 @@
 
             <div class="input-group">
                 <label>🏥 Citas Médicas</label>
-                <input type="text" id="citas_medicas" class="uppercase-input" placeholder="Ej: PROGRAMADA">
+                <input type="text" id="citas_medicas" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>🦷 Odontología</label>
-                <input type="text" id="citas_odontologia" class="uppercase-input" placeholder="Ej: PENDIENTE">
+                <input type="text" id="citas_odontologia" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>🧠 Psicología</label>
-                <input type="text" id="citas_psicologia" class="uppercase-input" placeholder="Ej: SEMANAL">
+                <input type="text" id="citas_psicologia" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>🤝 Consejería Terapéutica</label>
-                <input type="text" id="consejeria" class="uppercase-input" placeholder="Ej: ACTIVA">
+                <input type="text" id="consejeria" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>🧪 Psiquiatría</label>
-                <input type="text" id="citas_psiquiatria" class="uppercase-input" placeholder="Ej: MENSUAL">
+                <input type="text" id="citas_psiquiatria" class="uppercase-input">
             </div>
             <div class="input-group">
                 <label>👨‍👩‍👧 Terapia en Familia</label>
-                <input type="text" id="terapia_familia" class="uppercase-input" placeholder="Ej: REQUIERE">
+                <input type="text" id="terapia_familia" class="uppercase-input">
             </div>
 
             <!-- ========== SECCIÓN 6: SEGUIMIENTO ========== -->
             <div class="input-group full-width" style="margin-top: 12px;">
                 <label>📝 Observaciones Adicionales</label>
-                <textarea id="observaciones" placeholder="Detalles médicos, comportamiento, notas importantes..."></textarea>
+                <textarea id="observaciones"></textarea>
             </div>
         </div>
 
@@ -186,7 +195,62 @@
     const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyfrxAl87JqqiqJIFyWtLRJILssjWlBe-P0V0tRLC_ZcRXHrVGtYd402kO4WhUs0w8iEQ/exec";
     let alertaSeleccionada = "Normal";
 
-    // Vista previa de la foto
+    // ═══════════════════════════════════════════
+    // CONVERSOR DE NÚMERO A LETRAS EN ESPAÑOL
+    // ═══════════════════════════════════════════
+    function numeroALetras(n) {
+        if (n === 0) return "cero";
+        if (n < 0) return "menos " + numeroALetras(-n);
+
+        const u = ["","un","dos","tres","cuatro","cinco","seis","siete","ocho","nueve"];
+        const esp = ["diez","once","doce","trece","catorce","quince","dieciséis","diecisiete","dieciocho","diecinueve"];
+        const dec = ["","diez","veinte","treinta","cuarenta","cincuenta","sesenta","setenta","ochenta","noventa"];
+        const cen = ["","ciento","doscientos","trescientos","cuatrocientos","quinientos","seiscientos","setecientos","ochocientos","novecientos"];
+
+        let r = "";
+
+        if (n >= 1000000) {
+            let m = Math.floor(n / 1000000);
+            r += (m === 1 ? "un millón " : numeroALetras(m) + " millones ");
+            n %= 1000000;
+        }
+        if (n >= 1000) {
+            let k = Math.floor(n / 1000);
+            r += (k === 1 ? "mil " : numeroALetras(k) + " mil ");
+            n %= 1000;
+        }
+        if (n >= 100) {
+            if (n === 100) { r += "cien"; n = 0; }
+            else { r += cen[Math.floor(n / 100)] + " "; n %= 100; }
+        }
+        if (n >= 20) {
+            if (n >= 21 && n <= 29) {
+                r += "veinti" + u[n - 20]; n = 0;
+            } else {
+                r += dec[Math.floor(n / 10)];
+                if (n % 10 > 0) r += " y " + u[n % 10];
+                n = 0;
+            }
+        } else if (n >= 10) {
+            r += esp[n - 10]; n = 0;
+        } else if (n > 0) {
+            r += u[n];
+        }
+
+        return r.trim();
+    }
+
+    function actualizarLetras() {
+        const val = parseInt(document.getElementById('costo_mensual').value) || 0;
+        const display = document.getElementById('valorEnLetras');
+        if (val > 0) {
+            display.textContent = '💬 "' + numeroALetras(val) + ' pesos"';
+        } else {
+            display.textContent = '';
+        }
+    }
+
+    // Vista previa foto
     document.getElementById('foto_paciente').onchange = function(ev) {
         const p = document.getElementById('preview');
         if (ev.target.files.length > 0) { p.src = URL.createObjectURL(ev.target.files[0]); p.style.display = 'block'; }
@@ -202,7 +266,7 @@
         };
     });
 
-    // Comprimir imagen antes de enviar
+    // Comprimir imagen manteniendo proporciones
     function compressImage(file, maxW, quality) {
         return new Promise(resolve => {
             const reader = new FileReader();
@@ -222,7 +286,7 @@
         });
     }
 
-    // Envío del formulario
+    // Envío
     document.getElementById('registroForm').onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('sendBtn');
@@ -238,6 +302,8 @@
             try { fotoBase64 = await compressImage(fi.files[0], 600, 0.5); } catch(err) {}
         }
 
+        const costoNum = parseInt(document.getElementById('costo_mensual').value) || 0;
+
         const payload = {
             fecha_registro:          new Date().toISOString().split('T')[0],
             foto_paciente:           fotoBase64,
@@ -245,15 +311,15 @@
             documento:               document.getElementById('cedula').value.trim(),
             edad:                    document.getElementById('edad').value || "",
             fecha_ingreso:           document.getElementById('fecha_ingreso').value,
-            costo_mensual:           document.getElementById('costo_mensual').value.trim(),
-            fecha_pago:              document.getElementById('fecha_pago').value,
-            estado_pago:             document.getElementById('estado_pago').value,
+            costo_mensual:           costoNum,
+            costo_en_letras:         costoNum > 0 ? numeroALetras(costoNum) + " pesos" : "",
+            mes_pago:                document.getElementById('mes_pago').value,
             nombre_acudiente:        document.getElementById('nombre_acudiente').value.trim().toUpperCase(),
             telefono_acudiente:      document.getElementById('telefono_acudiente').value.trim(),
             parentesco:              document.getElementById('parentesco').value.trim().toUpperCase(),
             medicamentos:            document.getElementById('medicamentos').value.trim().toUpperCase(),
-            tomas_psilocibina:       document.getElementById('psilocibina').value || 0,
-            sueros_desintoxicacion:  document.getElementById('sueros').value || 0,
+            tomas_psilocibina:       document.getElementById('psilocibina').value || "",
+            sueros_desintoxicacion:  document.getElementById('sueros').value || "",
             citas_medicas:           document.getElementById('citas_medicas').value.trim().toUpperCase(),
             citas_odontologia:       document.getElementById('citas_odontologia').value.trim().toUpperCase(),
             citas_psicologia:        document.getElementById('citas_psicologia').value.trim().toUpperCase(),
@@ -273,16 +339,16 @@
                 body: JSON.stringify(payload)
             });
 
-            status.innerText = "✅ Ficha de " + payload.nombre_paciente + " generada exitosamente.";
+            status.innerText = "✅ Ficha generada exitosamente.";
             status.className = "status success";
             document.getElementById('registroForm').reset();
             document.getElementById('preview').style.display = 'none';
-            // Reset alerta
+            document.getElementById('valorEnLetras').textContent = '';
             document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.alerta-btn[data-val="Normal"]').classList.add('active');
             alertaSeleccionada = "Normal";
         } catch (err) {
-            status.innerText = "❌ Error de conexión. Revisa tu internet.";
+            status.innerText = "❌ Error de conexión.";
             status.className = "status error";
         } finally {
             btn.innerText = "ENVIAR Y GENERAR FICHA";
