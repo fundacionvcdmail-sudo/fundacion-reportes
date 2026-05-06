@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fundación | Portal Clínico</title>
+    <title>Fundación | Ingreso Estructurado</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6366f1;
             --secondary: #a855f7;
             --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.7);
+            --card: rgba(30, 41, 59, 0.8);
             --text: #f8fafc;
+            --input-bg: rgba(15, 23, 42, 0.6);
         }
 
         * {
@@ -24,7 +25,7 @@
             background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
             color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 20px 15px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -33,19 +34,20 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             background: var(--card);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             background: linear-gradient(to right, #818cf8, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -53,57 +55,79 @@
         }
 
         p.subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: #94a3b8;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+        }
+
+        /* Sistema de Grid para agrupar campos */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #818cf8;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             margin-left: 4px;
         }
 
-        textarea {
+        input, textarea {
             width: 100%;
-            height: 180px;
-            background: rgba(15, 23, 42, 0.5);
+            background: var(--input-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 12px 14px;
             color: white;
             font-family: inherit;
-            font-size: 15px;
-            resize: none;
+            font-size: 14px;
             transition: all 0.3s ease;
         }
 
-        textarea:focus {
+        input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        /* Sección visual de Alerta */
+        .alerta-section {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
         .alerta-selector {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 8px;
         }
 
         .alerta-btn {
-            padding: 12px;
-            border-radius: 12px;
+            padding: 12px 5px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(15, 23, 42, 0.3);
             color: #94a3b8;
@@ -125,19 +149,20 @@
             border: none;
             border-radius: 16px;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
             transition: transform 0.2s;
+            margin-top: 10px;
         }
 
         .submit-btn:active { transform: scale(0.98); }
 
         .status {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             padding: 12px;
             border-radius: 12px;
             display: none;
@@ -147,35 +172,95 @@
         .status.error { background: rgba(239, 68, 68, 0.2); color: #f87171; display: block; }
 
         .loading { pointer-events: none; opacity: 0.7; }
+        
+        /* Ocultar flechas de inputs numéricos */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Portal Fundación</h1>
-        <p class="subtitle">Gestión de Reportes Clínicos</p>
+        <h1>Ingreso Clínico</h1>
+        <p class="subtitle">Complete los campos para registrar al paciente</p>
 
-        <div class="input-group">
-            <label>Cuerpo del Reporte</label>
-            <textarea id="reporte" placeholder="Ej: Jeison Ordoñez... 25 años... 1 suero..."></textarea>
-        </div>
+        <form id="registroForm">
+            <div class="form-grid">
+                <!-- Fila 1 -->
+                <div class="input-group full-width">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="nombre" placeholder="Ej: Jeison Ferney Ordoñez" required>
+                </div>
+                
+                <!-- Fila 2 -->
+                <div class="input-group">
+                    <label>Cédula</label>
+                    <input type="number" id="cedula" placeholder="1004695031">
+                </div>
+                <div class="input-group">
+                    <label>Edad (Años)</label>
+                    <input type="number" id="edad" placeholder="25">
+                </div>
 
-        <label>Nivel de Alerta</label>
-        <div class="alerta-selector">
-            <div class="alerta-btn active" data-val="Normal">NORMAL</div>
-            <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
-            <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
-        </div>
+                <!-- Fila 3 -->
+                <div class="input-group">
+                    <label>Fecha de Ingreso</label>
+                    <!-- Formato de fecha nativo del celular -->
+                    <input type="date" id="fecha_ingreso">
+                </div>
+                <div class="input-group">
+                    <label>Tiempo en Proceso</label>
+                    <input type="text" id="tiempo" placeholder="Ej: 8 meses">
+                </div>
 
-        <button id="sendBtn" class="submit-btn">SINCRONIZAR CON EXCEL</button>
-        
-        <div id="statusMsg" class="status"></div>
+                <!-- Fila 4: Tratamientos -->
+                <div class="input-group">
+                    <label>🍄 Tomas Psilocibina</label>
+                    <input type="number" id="psilocibina" placeholder="Cantidad (Ej: 3)" value="0">
+                </div>
+                <div class="input-group">
+                    <label>💉 Sueros Desintox.</label>
+                    <input type="number" id="sueros" placeholder="Cantidad (Ej: 1)" value="0">
+                </div>
+
+                <!-- Fila 5: Atenciones -->
+                <div class="input-group">
+                    <label>🧠 Atenc. Psicología</label>
+                    <input type="number" id="psicologia" placeholder="Cantidad" value="0">
+                </div>
+                <div class="input-group">
+                    <label>🤝 Atenc. Consejería</label>
+                    <input type="number" id="consejeria" placeholder="Cantidad" value="0">
+                </div>
+
+                <!-- Observaciones -->
+                <div class="input-group full-width" style="margin-top: 10px;">
+                    <label>Observaciones Adicionales</label>
+                    <textarea id="observaciones" placeholder="Detalles médicos, comportamiento, reporte general..."></textarea>
+                </div>
+            </div>
+
+            <!-- Nivel de Alerta -->
+            <div class="alerta-section">
+                <label style="text-align: center; margin-bottom: 12px; display: block;">🚨 Seleccionar Nivel de Alerta</label>
+                <div class="alerta-selector">
+                    <div class="alerta-btn active" data-val="Normal">NORMAL</div>
+                    <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
+                    <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
+                </div>
+            </div>
+
+            <button type="submit" id="sendBtn" class="submit-btn">ENVIAR REGISTRO</button>
+            <div id="statusMsg" class="status"></div>
+        </form>
     </div>
 
     <script>
+        // EL MISMO WEBHOOK QUE YA ESTÁ FUNCIONANDO
         const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyfrxAl87JqqiqJIFyWtLRJILssjWlBe-P0V0tRLC_ZcRXHrVGtYd402kO4WhUs0w8iEQ/exec";
         let alertaSeleccionada = "Normal";
 
+        // Lógica visual de los botones de alerta
         document.querySelectorAll('.alerta-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
@@ -184,64 +269,60 @@
             };
         });
 
-        function extraerDatos(texto) {
-            const lines = texto.split('\n').map(l => l.trim()).filter(l => l);
-            const data = {
-                fecha_registro: new Date().toISOString().split('T')[0],
-                nombre_completo: lines[0] || "Sin Nombre",
-                nivel_alerta: alertaSeleccionada,
-                observaciones: texto
-            };
+        // Prevenir el envío por defecto y procesar nuestros datos
+        document.getElementById('registroForm').onsubmit = async (e) => {
+            e.preventDefault(); // Evita recargar la página
 
-            const cedulaMatch = texto.match(/cedula:\s*(\d+)/i) || texto.match(/cc\s*(\d+)/i) || texto.match(/(\d{8,10})/);
-            if(cedulaMatch) data.cedula = cedulaMatch[1];
-
-            const edadMatch = texto.match(/(\d+)\s*años/i);
-            if(edadMatch) data.edad = parseInt(edadMatch[1]);
-
-            const suerosMatch = texto.match(/(\d+)\s*suero/i);
-            if(suerosMatch) data.sueros_desintoxicacion = parseInt(suerosMatch[1]);
-
-            const tomasMatch = texto.match(/(\d+)\s*tomas/i);
-            if(tomasMatch) data.tomas_psilocibina = parseInt(tomasMatch[1]);
-
-            const mesesMatch = texto.match(/(\d+)\s*meses/i);
-            if(mesesMatch) data.tiempo_proceso = mesesMatch[0];
-
-            return data;
-        }
-
-        document.getElementById('sendBtn').onclick = async () => {
-            const reporte = document.getElementById('reporte').value;
             const btn = document.getElementById('sendBtn');
             const status = document.getElementById('statusMsg');
 
-            if(!reporte) return alert("Por favor pegue el reporte");
+            // Recolectar datos exactos de cada casilla
+            const payload = {
+                fecha_registro: new Date().toISOString().split('T')[0], // Fecha de hoy automática
+                nombre_completo: document.getElementById('nombre').value.trim(),
+                cedula: document.getElementById('cedula').value.trim(),
+                edad: parseInt(document.getElementById('edad').value) || 0,
+                fecha_ingreso: document.getElementById('fecha_ingreso').value, // Formato YYYY-MM-DD
+                tiempo_proceso: document.getElementById('tiempo').value.trim(),
+                tomas_psilocibina: parseInt(document.getElementById('psilocibina').value) || 0,
+                sueros_desintoxicacion: parseInt(document.getElementById('sueros').value) || 0,
+                atenciones_psicologia: parseInt(document.getElementById('psicologia').value) || 0,
+                atenciones_consejeria: parseInt(document.getElementById('consejeria').value) || 0,
+                observaciones: document.getElementById('observaciones').value.trim(),
+                nivel_alerta: alertaSeleccionada
+            };
 
-            btn.innerText = "PROCESANDO...";
+            // Animación de carga
+            btn.innerText = "Sincronizando con Excel...";
             btn.classList.add('loading');
             status.style.display = "none";
 
-            const payload = extraerDatos(reporte);
-
             try {
-                // Fetch con no-cors para evitar bloqueos del navegador hacia Google Scripts
+                // Envío al servidor
                 await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // Evita bloqueos de seguridad del navegador
                     cache: 'no-cache',
                     body: JSON.stringify(payload)
                 });
 
-                status.innerText = "✅ Reporte enviado al Excel correctamente";
+                // Éxito
+                status.innerText = "✅ Registro ingresado correctamente en la tabla.";
                 status.className = "status success";
-                document.getElementById('reporte').value = "";
                 
+                // Limpiar el formulario
+                document.getElementById('registroForm').reset();
+                
+                // Resetear botones de alerta a Normal
+                document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('.alerta-btn[data-val="Normal"]').classList.add('active');
+                alertaSeleccionada = "Normal";
+
             } catch (err) {
-                status.innerText = "❌ Error al conectar con el servidor";
+                status.innerText = "❌ Hubo un error de conexión. Intente de nuevo.";
                 status.className = "status error";
             } finally {
-                btn.innerText = "SINCRONIZAR CON EXCEL";
+                btn.innerText = "ENVIAR REGISTRO";
                 btn.classList.remove('loading');
             }
         };
