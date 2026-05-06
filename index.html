@@ -86,6 +86,10 @@
                 <input type="date" id="fecha_ingreso">
             </div>
             <div class="input-group">
+                <label>Día de Pago</label>
+                <input type="number" id="dia_pago" placeholder="Ej: 15" min="1" max="31">
+            </div>
+            <div class="input-group">
                 <label>Mes de Pago</label>
                 <select id="mes_pago">
                     <option value="">— Seleccionar —</option>
@@ -107,6 +111,10 @@
                 <label>Costo Mensual ($)</label>
                 <input type="number" id="costo_mensual" placeholder="Ej: 750000" oninput="actualizarLetras()">
                 <div class="valor-letras" id="valorEnLetras"></div>
+            </div>
+            <div class="input-group full-width">
+                <label>💸 Pagos Pendientes Generales</label>
+                <input type="text" id="pagos_pendientes" class="uppercase-input" placeholder="Ej: DEBE FEBRERO Y MARZO">
             </div>
 
             <!-- ========== SECCIÓN 3: ACUDIENTE ========== -->
@@ -176,19 +184,19 @@
             </div>
         </div>
 
-        <!-- ALERTA -->
-        <div class="alerta-section">
-            <label style="text-align:center; margin-bottom:10px; display:block;">🚨 NIVEL DE RIESGO / ALERTA</label>
-            <div class="alerta-selector">
-                <div class="alerta-btn active" data-val="Normal">NORMAL</div>
-                <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
-                <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
-            </div>
-        </div>
-
         <button type="submit" id="sendBtn" class="submit-btn">ENVIAR Y GENERAR FICHA</button>
         <div id="statusMsg" class="status"></div>
     </form>
+
+    <!-- ALERTA FUERA DEL FORM para que no dispare el submit al tocar -->
+    <div class="alerta-section">
+        <label style="text-align:center; margin-bottom:10px; display:block;">🚨 NIVEL DE RIESGO / ALERTA</label>
+        <div class="alerta-selector">
+            <div class="alerta-btn active" data-val="Normal">NORMAL</div>
+            <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
+            <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -257,13 +265,15 @@
         else { p.style.display = 'none'; }
     };
 
-    // Botones de alerta
+    // Botones de alerta (con preventDefault para evitar cualquier submit accidental)
     document.querySelectorAll('.alerta-btn').forEach(btn => {
-        btn.onclick = () => {
+        btn.addEventListener('click', function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
             document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            alertaSeleccionada = btn.dataset.val;
-        };
+            this.classList.add('active');
+            alertaSeleccionada = this.dataset.val;
+        });
     });
 
     // Comprimir imagen manteniendo proporciones
@@ -313,7 +323,9 @@
             fecha_ingreso:           document.getElementById('fecha_ingreso').value,
             costo_mensual:           costoNum,
             costo_en_letras:         costoNum > 0 ? numeroALetras(costoNum) + " pesos" : "",
+            dia_pago:                document.getElementById('dia_pago').value || "",
             mes_pago:                document.getElementById('mes_pago').value,
+            pagos_pendientes:        document.getElementById('pagos_pendientes').value.trim().toUpperCase(),
             nombre_acudiente:        document.getElementById('nombre_acudiente').value.trim().toUpperCase(),
             telefono_acudiente:      document.getElementById('telefono_acudiente').value.trim(),
             parentesco:              document.getElementById('parentesco').value.trim().toUpperCase(),
