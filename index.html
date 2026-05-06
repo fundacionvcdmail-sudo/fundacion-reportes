@@ -176,44 +176,62 @@
         /* Ocultar flechas de inputs numéricos */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        /* Asegurar mayúsculas visuales en campos clave */
+        .uppercase-input { text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Ingreso Clínico</h1>
-        <p class="subtitle">Complete los campos para registrar al paciente</p>
+        <p class="subtitle">Complete los campos para generar la ficha del paciente</p>
 
         <form id="registroForm">
             <div class="form-grid">
-                <!-- Fila 1 -->
+                
                 <div class="input-group full-width">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="nombre" placeholder="Ej: Jeison Ferney Ordoñez" required>
+                    <label>Nombre Completo del Paciente</label>
+                    <input type="text" id="nombre" class="uppercase-input" placeholder="Ej: JESICA ALEJANDRA MENDOZA" required>
                 </div>
                 
-                <!-- Fila 2 -->
                 <div class="input-group">
-                    <label>Cédula</label>
-                    <input type="number" id="cedula" placeholder="1004695031">
+                    <label>Documento de Identidad</label>
+                    <input type="number" id="cedula" placeholder="1192800338" required>
                 </div>
                 <div class="input-group">
                     <label>Edad (Años)</label>
                     <input type="number" id="edad" placeholder="25">
                 </div>
 
-                <!-- Fila 3 -->
                 <div class="input-group">
                     <label>Fecha de Ingreso</label>
-                    <!-- Formato de fecha nativo del celular -->
-                    <input type="date" id="fecha_ingreso">
+                    <input type="date" id="fecha_ingreso" required>
                 </div>
                 <div class="input-group">
+                    <label>Costo Mensual ($)</label>
+                    <input type="number" id="costo_mensual" placeholder="Ej: 750000" required>
+                </div>
+
+                <div class="input-group full-width" style="margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <label>Nombre del Acudiente</label>
+                    <input type="text" id="nombre_acudiente" class="uppercase-input" placeholder="Ej: HUGO LEON" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Teléfono Acudiente</label>
+                    <input type="tel" id="telefono_acudiente" placeholder="Celular" required>
+                </div>
+                <div class="input-group">
+                    <label>Parentesco</label>
+                    <input type="text" id="parentesco" class="uppercase-input" placeholder="Ej: PADRE" required>
+                </div>
+
+                <div class="input-group full-width" style="margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
                     <label>Tiempo en Proceso</label>
                     <input type="text" id="tiempo" placeholder="Ej: 8 meses">
                 </div>
 
-                <!-- Fila 4: Tratamientos -->
                 <div class="input-group">
                     <label>🍄 Tomas Psilocibina</label>
                     <input type="number" id="psilocibina" placeholder="Cantidad (Ej: 3)" value="0">
@@ -223,7 +241,6 @@
                     <input type="number" id="sueros" placeholder="Cantidad (Ej: 1)" value="0">
                 </div>
 
-                <!-- Fila 5: Atenciones -->
                 <div class="input-group">
                     <label>🧠 Atenc. Psicología</label>
                     <input type="number" id="psicologia" placeholder="Cantidad" value="0">
@@ -233,14 +250,12 @@
                     <input type="number" id="consejeria" placeholder="Cantidad" value="0">
                 </div>
 
-                <!-- Observaciones -->
                 <div class="input-group full-width" style="margin-top: 10px;">
                     <label>Observaciones Adicionales</label>
                     <textarea id="observaciones" placeholder="Detalles médicos, comportamiento, reporte general..."></textarea>
                 </div>
             </div>
 
-            <!-- Nivel de Alerta -->
             <div class="alerta-section">
                 <label style="text-align: center; margin-bottom: 12px; display: block;">🚨 Seleccionar Nivel de Alerta</label>
                 <div class="alerta-selector">
@@ -250,7 +265,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="sendBtn" class="submit-btn">ENVIAR REGISTRO</button>
+            <button type="submit" id="sendBtn" class="submit-btn">ENVIAR Y GENERAR FICHA</button>
             <div id="statusMsg" class="status"></div>
         </form>
     </div>
@@ -276,13 +291,18 @@
             const btn = document.getElementById('sendBtn');
             const status = document.getElementById('statusMsg');
 
-            // Recolectar datos exactos de cada casilla
+            // Recolectar datos exactos de cada casilla. 
+            // Nota: Se aplica .toUpperCase() a los campos que van directo a la plantilla de impresión
             const payload = {
-                fecha_registro: new Date().toISOString().split('T')[0], // Fecha de hoy automática
-                nombre_completo: document.getElementById('nombre').value.trim(),
-                cedula: document.getElementById('cedula').value.trim(),
+                fecha_registro: new Date().toISOString().split('T')[0],
+                nombre_paciente: document.getElementById('nombre').value.trim().toUpperCase(),
+                documento: document.getElementById('cedula').value.trim(),
                 edad: parseInt(document.getElementById('edad').value) || 0,
-                fecha_ingreso: document.getElementById('fecha_ingreso').value, // Formato YYYY-MM-DD
+                fecha_ingreso: document.getElementById('fecha_ingreso').value,
+                costo_mensual: document.getElementById('costo_mensual').value.trim(),
+                nombre_acudiente: document.getElementById('nombre_acudiente').value.trim().toUpperCase(),
+                telefono_acudiente: document.getElementById('telefono_acudiente').value.trim(),
+                parentesco: document.getElementById('parentesco').value.trim().toUpperCase(),
                 tiempo_proceso: document.getElementById('tiempo').value.trim(),
                 tomas_psilocibina: parseInt(document.getElementById('psilocibina').value) || 0,
                 sueros_desintoxicacion: parseInt(document.getElementById('sueros').value) || 0,
@@ -307,7 +327,7 @@
                 });
 
                 // Éxito
-                status.innerText = "✅ Registro ingresado correctamente en la tabla.";
+                status.innerText = "✅ Ficha de paciente generada correctamente.";
                 status.className = "status success";
                 
                 // Limpiar el formulario
@@ -322,7 +342,7 @@
                 status.innerText = "❌ Hubo un error de conexión. Intente de nuevo.";
                 status.className = "status error";
             } finally {
-                btn.innerText = "ENVIAR REGISTRO";
+                btn.innerText = "ENVIAR Y GENERAR FICHA";
                 btn.classList.remove('loading');
             }
         };
