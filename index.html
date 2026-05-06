@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fundación | Portal Clínico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #818cf8;
+            margin-bottom: 8px;
+            margin-left: 4px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            font-family: inherit;
+            font-size: 15px;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .alerta-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .alerta-btn {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.3);
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .alerta-btn.active[data-val="Normal"] { background: #166534; color: white; border-color: #22c55e; }
+        .alerta-btn.active[data-val="Precaución"] { background: #854d0e; color: white; border-color: #eab308; }
+        .alerta-btn.active[data-val="Crítico"] { background: #991b1b; color: white; border-color: #ef4444; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:active { transform: scale(0.98); }
+
+        .status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .status.success { background: rgba(34, 197, 94, 0.2); color: #4ade80; display: block; }
+        .status.error { background: rgba(239, 68, 68, 0.2); color: #f87171; display: block; }
+
+        .loading { pointer-events: none; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Portal Fundación</h1>
+        <p class="subtitle">Gestión de Reportes Clínicos</p>
+
+        <div class="input-group">
+            <label>Cuerpo del Reporte</label>
+            <textarea id="reporte" placeholder="Ej: Jeison Ordoñez... 25 años... 1 suero..."></textarea>
+        </div>
+
+        <label>Nivel de Alerta</label>
+        <div class="alerta-selector">
+            <div class="alerta-btn active" data-val="Normal">NORMAL</div>
+            <div class="alerta-btn" data-val="Precaución">PRECAUCIÓN</div>
+            <div class="alerta-btn" data-val="Crítico">CRÍTICO</div>
+        </div>
+
+        <button id="sendBtn" class="submit-btn">SINCRONIZAR CON EXCEL</button>
+        
+        <div id="statusMsg" class="status"></div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyfrxAl87JqqiqJIFyWtLRJILssjWlBe-P0V0tRLC_ZcRXHrVGtYd402kO4WhUs0w8iEQ/exec";
+        let alertaSeleccionada = "Normal";
+
+        document.querySelectorAll('.alerta-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.alerta-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                alertaSeleccionada = btn.dataset.val;
+            };
+        });
+
+        function extraerDatos(texto) {
+            const lines = texto.split('\n').map(l => l.trim()).filter(l => l);
+            const data = {
+                fecha_registro: new Date().toISOString().split('T')[0],
+                nombre_completo: lines[0] || "Sin Nombre",
+                nivel_alerta: alertaSeleccionada,
+                observaciones: texto
+            };
+
+            const cedulaMatch = texto.match(/cedula:\s*(\d+)/i) || texto.match(/cc\s*(\d+)/i) || texto.match(/(\d{8,10})/);
+            if(cedulaMatch) data.cedula = cedulaMatch[1];
+
+            const edadMatch = texto.match(/(\d+)\s*años/i);
+            if(edadMatch) data.edad = parseInt(edadMatch[1]);
+
+            const suerosMatch = texto.match(/(\d+)\s*suero/i);
+            if(suerosMatch) data.sueros_desintoxicacion = parseInt(suerosMatch[1]);
+
+            const tomasMatch = texto.match(/(\d+)\s*tomas/i);
+            if(tomasMatch) data.tomas_psilocibina = parseInt(tomasMatch[1]);
+
+            const mesesMatch = texto.match(/(\d+)\s*meses/i);
+            if(mesesMatch) data.tiempo_proceso = mesesMatch[0];
+
+            return data;
+        }
+
+        document.getElementById('sendBtn').onclick = async () => {
+            const reporte = document.getElementById('reporte').value;
+            const btn = document.getElementById('sendBtn');
+            const status = document.getElementById('statusMsg');
+
+            if(!reporte) return alert("Por favor pegue el reporte");
+
+            btn.innerText = "PROCESANDO...";
+            btn.classList.add('loading');
+            status.style.display = "none";
+
+            const payload = extraerDatos(reporte);
+
+            try {
+                // Fetch con no-cors para evitar bloqueos del navegador hacia Google Scripts
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    body: JSON.stringify(payload)
+                });
+
+                status.innerText = "✅ Reporte enviado al Excel correctamente";
+                status.className = "status success";
+                document.getElementById('reporte').value = "";
+                
+            } catch (err) {
+                status.innerText = "❌ Error al conectar con el servidor";
+                status.className = "status error";
+            } finally {
+                btn.innerText = "SINCRONIZAR CON EXCEL";
+                btn.classList.remove('loading');
+            }
+        };
+    </script>
+</body>
+</html>
